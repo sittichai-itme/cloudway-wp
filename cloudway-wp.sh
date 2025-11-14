@@ -2,7 +2,7 @@
 
 APPS_DIR="/home/1339491.cloudwaysapps.com"
 
-USER_HOME=$(dirname "$APPS_DIR")
+USER_HOME="$HOME"
 LOG_FILE="$USER_HOME/update_log_$(date +%Y%m%d_%H%M%S).txt"
 
 echo "------ Mass Update started at $(date) ------" >> "$LOG_FILE"
