@@ -4,10 +4,8 @@
 
 # กำหนด Path ไปยังโฟลเดอร์ Applications ของ Cloudways
 # สำคัญ: แก้ไข 'master' เป็นชื่อผู้ใช้งาน SSH ของคุณ หากไม่ใช่ 'master'
-APPS_DIR="/home/master/applications" 
-
-# กำหนดไฟล์ Log (จะถูกสร้างในโฟลเดอร์ Applications)
-LOG_FILE="$APPS_DIR/update_log_$(date +%Y%m%d_%H%M%S).txt"
+USER_HOME=$(dirname "$APPS_DIR")
+LOG_FILE="$USER_HOME/update_log_$(date +%Y%m%d_%H%M%S).txt"
 
 # --- CONFIGURATION END ---
 
@@ -20,7 +18,7 @@ cd "$APPS_DIR" || { echo "Error: Could not change to $APPS_DIR. Exiting." | tee 
 for APP_FOLDER in */; do
     # ตัด / ที่ท้ายชื่อโฟลเดอร์ออก (e.g., atveeexaya)
     APP_NAME="${APP_FOLDER%/}"
-    SITE_PATH="$APPS_FOLDER/public_html"
+    SITE_PATH="$APP_FOLDER/public_html"
 
     # ตรวจสอบว่า Application Folder นี้มีโฟลเดอร์ public_html หรือไม่ (ยืนยันว่าเป็น WP Site)
     if [ -d "$SITE_PATH" ]; then
