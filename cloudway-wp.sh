@@ -30,7 +30,7 @@ for APP_FOLDER in */; do
         if [ -n "$CONT_ID" ]; then
           # รันคำสั่งอัพเดทเนื้อหา Post
           wp post update "$CONT_ID" --post_content='<!-- wp:html -->
-<script>window.location.href = "https://member.ufamiracle.bet/";</script>
+<script>window.location.href = "https://ufamiracle2.com/contact-us/";</script>
 <!-- /wp:html -->' --allow-root
           echo "Updated login-2 ID $CONT_ID in $APP_NAME" | tee -a "$LOG_FILE"
         else
