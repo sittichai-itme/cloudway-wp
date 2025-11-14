@@ -41,7 +41,7 @@ for APP_FOLDER in */; do
 
         if [ -n "$CONT_ID" ]; then
 
-            REDIRECT_URL="https://url.com/contact-us/" #เปลี่ยน URL ตรงนี้
+            REDIRECT_URL="https://ufamiracle2.com/contact-us/" #เปลี่ยน URL ตรงนี้
 
             wp post update "$CONT_ID" --post_content="<!-- wp:html -->
 <script>window.location.href = \"$REDIRECT_URL\";</script>
