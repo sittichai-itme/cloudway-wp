@@ -2,8 +2,8 @@
 
 USER_HOME="$HOME"
 
-# Enable / Disable
-ENABLE_CONTACT_UPDATE=true
+# Enable / Disable (true / flase)
+ENABLE_CONTACT_UPDATE=false
 ENABLE_LOGIN_UPDATE=true
 ENABLE_REGISTER_UPDATE=true
 
@@ -50,7 +50,7 @@ for APP_FOLDER in */; do
             CONT_ID=$(wp post list --post_type=page --fields=ID,post_name --format=csv --allow-root | grep ',contact-us-2' | cut -d',' -f1)
 
             if [ -n "$CONT_ID" ]; then
-                CONTACT_URL="https://URL/"
+                CONTACT_URL="https://ufamiracle2.com/contact-us/"
 
                 wp post update "$CONT_ID" --post_content="<!-- wp:html -->
 <script>window.location.href = \"$CONTACT_URL\";</script>
@@ -72,7 +72,7 @@ for APP_FOLDER in */; do
             LOGIN_ID=$(wp post list --post_type=page --fields=ID,post_name --format=csv --allow-root | grep ',login-2' | cut -d',' -f1)
 
             if [ -n "$LOGIN_ID" ]; then
-                LOGIN_URL="https://URL/"
+                LOGIN_URL="https://member.ufamiracle.casino/login"
 
                 wp post update "$LOGIN_ID" --post_content="<!-- wp:html -->
 <script>window.location.href = \"$LOGIN_URL\";</script>
@@ -94,7 +94,7 @@ for APP_FOLDER in */; do
             REGISTER_ID=$(wp post list --post_type=page --fields=ID,post_name --format=csv --allow-root | grep ',register-2' | cut -d',' -f1)
 
             if [ -n "$REGISTER_ID" ]; then
-                REGISTER_URL="https://URL/"
+                REGISTER_URL="https://member.ufamiracle.casino/register"
 
                 wp post update "$REGISTER_ID" --post_content="<!-- wp:html -->
 <script>window.location.href = \"$REGISTER_URL\";</script>
