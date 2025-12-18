@@ -32,7 +32,7 @@ for SITE in $(ls -d */ 2>/dev/null | sed 's/\///' | grep -E '\.[a-zA-Z]{2,4}$');
         echo "Processing site: $SITE" | tee -a "$LOG_FILE"
 
         
-        if wp plugin is-active "$PLUGIN_NAME" --allow-root --quiet; then
+        if wp plugin is-active "$PLUGIN_NAME" --skip-plugins --allow-root --quiet; then
             echo "Status: Plugin is active. Deactivating..." | tee -a "$LOG_FILE"
             wp plugin deactivate "$PLUGIN_NAME" --skip-plugins --allow-root >> "$LOG_FILE" 2>&1
         else
