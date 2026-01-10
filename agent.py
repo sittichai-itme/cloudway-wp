@@ -25,14 +25,12 @@ if len(sys.argv) > 3:
 else:
     ENABLE_TEST_DOMAINS = 0
 
-# --- PROXY & ENDPOINT ---
 PROXY_URL = "http://admin:password@YOUR_HOME_IP:8080"
-PUSHGATEWAY_URL = f"http://110.169.136.23:8282/metrics/job/vps_monitor/instance/{VPS_NAME}"
+PUSHGATEWAY_URL = f"5d6a05ca181c.sn.mynetname.net:8282/metrics/job/vps_monitor/instance/{VPS_NAME}"
 CHECK_INTERVAL = 3600
 TIMEOUT = 20
 TEST_DOMAINS = ["google.com", "facebook.com"]
 
-# --- LOGGING ---
 def log_info(msg): print(f"[{datetime.now().strftime('%H:%M:%S')}] [INFO] {msg}")
 def log_success(msg): print(f"[{datetime.now().strftime('%H:%M:%S')}] \033[92m[PASS]\033[0m {msg}")
 def log_warn(msg): print(f"[{datetime.now().strftime('%H:%M:%S')}] \033[93m[WARN]\033[0m {msg}")
@@ -75,7 +73,6 @@ async def check_domain(client, domain, semaphore):
             status_code = resp.status_code
             content = resp.text.lower()
 
-            # à¸•à¸£à¸§à¸ˆà¸ªà¸­à¸šà¸›à¸£à¸°à¹€à¸ à¸— Error à¸ªà¸³à¸«à¸£à¸±à¸š Label à¹à¸¥à¸° Log
             if "facebook" not in content:
                 error_type = "missing_facebook_keyword"
                 reason = "Facebook missing or Thin content"
@@ -100,13 +97,12 @@ async def check_domain(client, domain, semaphore):
             error_type = type(e).__name__
             reason = error_type
 
-        # Metrics data à¸ªà¸³à¸«à¸£à¸±à¸š Pushgateway
+        # Metrics data
         m = f'web_status{{domain="{domain}", vps="{VPS_NAME}", reason="{error_type}"}} {is_healthy}\n'
         m += f'web_latency{{domain="{domain}", vps="{VPS_NAME}"}} {latency:.4f}\n'
         m += f'web_http_status{{domain="{domain}", vps="{VPS_NAME}"}} {status_code}\n'
         m += f'web_ssl_expiry_days{{domain="{domain}", vps="{VPS_NAME}"}} {ssl_days}\n'
 
-        # --- à¹à¸à¹‰à¹„à¸‚à¸ªà¹ˆà¸§à¸™à¸à¸²à¸£à¹à¸ªà¸”à¸‡à¸œà¸¥ Log à¹ƒà¸«à¹‰à¸¥à¸°à¹€à¸­à¸µà¸¢à¸”à¸‚à¸¶à¹‰à¸™ ---
         if is_healthy:
             log_success(f"{domain} - OK | SSL: {ssl_days}d")
         else:
@@ -140,7 +136,7 @@ async def collect_metrics():
             tasks = [check_domain(client, d, semaphore) for d in domains]
             results = await asyncio.gather(*tasks)
     except TypeError:
-        # Fallback à¸ªà¸³à¸«à¸£à¸±à¸š httpx version à¹€à¸à¹ˆà¸²
+        
         if USE_PROXY:
             client_kwargs["proxies"] = PROXY_URL
             if "proxy" in client_kwargs: del client_kwargs["proxy"]
