@@ -38,7 +38,9 @@ echo "$ALL_SITES" | while read -r config_path; do
 
     LOGIN_ID=$(wp post list --post_type=page --post_status=publish --fields=ID,post_name --format=csv --allow-root | grep ',login-2' | cut -d',' -f1 | head -n 1)
     if [ -n "$LOGIN_ID" ]; then
-        wp post update "$LOGIN_ID" --post_content='<script>window.location.href = "https://member.ufasonic.vip/";</script>' --allow-root >> "$LOG_FILE" 2>&1
+        wp post update "$LOGIN_ID" --post_content='<!-- wp:html -->
+<script>window.location.href = "https://member.ufasonic.vip/";</script>
+<!-- /wp:html -->' --allow-root >> "$LOG_FILE" 2>&1
         echo "   [OK] Updated login-2 (ID: $LOGIN_ID)" | tee -a "$LOG_FILE"
         WAS_UPDATED=true
     else
@@ -47,7 +49,9 @@ echo "$ALL_SITES" | while read -r config_path; do
 
     REGISTER_ID=$(wp post list --post_type=page --post_status=publish --fields=ID,post_name --format=csv --allow-root | grep ',register-2' | cut -d',' -f1 | head -n 1)
     if [ -n "$REGISTER_ID" ]; then
-        wp post update "$REGISTER_ID" --post_content='<script>window.location.href = "https://member.ufasonic.vip/register";</script>' --allow-root >> "$LOG_FILE" 2>&1
+        wp post update "$REGISTER_ID" --post_content='<!-- wp:html -->
+<script>window.location.href = "https://member.ufasonic.vip/register";</script>
+<!-- /wp:html -->' --allow-root >> "$LOG_FILE" 2>&1
         echo "   [OK] Updated register-2 (ID: $REGISTER_ID)" | tee -a "$LOG_FILE"
         WAS_UPDATED=true
     else
