@@ -26,7 +26,7 @@ else:
     ENABLE_TEST_DOMAINS = 0
 
 PROXY_URL = "http://admin:password@YOUR_HOME_IP:8080"
-PUSHGATEWAY_URL = f"5d6a05ca181c.sn.mynetname.net:8282/metrics/job/vps_monitor/instance/{VPS_NAME}"
+PUSHGATEWAY_URL = f"http://5d6a05ca181c.sn.mynetname.net:8282/metrics/job/vps_monitor/instance/{VPS_NAME}"
 CHECK_INTERVAL = 3600
 TIMEOUT = 20
 TEST_DOMAINS = ["google.com", "facebook.com"]
