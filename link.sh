@@ -3,7 +3,7 @@
 LOGIN_REDIRECT_URL="https://member.ufasonic.vip/"
 REGISTER_REDIRECT_URL="https://member.ufasonic.vip/register"
 OLD_CONTACT_URL="https://member.ufasonics.com/contact-us"
-NEW_CONTACT_URL="https://member.ufasonics.vip/contact-us"
+NEW_CONTACT_URL="https://member.ufasonic.vip/contact-us"
 UPDATE_LOGIN=false
 UPDATE_REGISTER=false
 UPDATE_CONTACT=false
