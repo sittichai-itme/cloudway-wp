@@ -14,8 +14,7 @@ while getopts "L:R:C:" opt; do
 done
 
 if [ -z "$LOGIN_REDIRECT_URL" ] && [ -z "$REGISTER_REDIRECT_URL" ] && [ -z "$NEW_CONTACT_URL" ]; then
-    echo "Usage: $0 [-L login_url] [-R register_url] [-C contact_url]"
-    echo "Usage ./update.sh -L "https://site.com" -R "https://site.com" -C "https://site.com""
+    echo "Usage: $0 -L "https://site.com" -R "https://site.com" -C "https://site.com""
     exit 1
 fi
 
