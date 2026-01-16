@@ -52,7 +52,7 @@ for APP_FOLDER in */; do
         cd "$SITE_PATH" || continue
         
         # ตรวจสอบว่าเป็น WP และดึง Domain
-        DOMAIN=$(wp option get home --allow-root 2>/dev/null)
+        DOMAIN=$(wp option get home --skip-plugins --skip-themes --allow-root 2>/dev/null)
 
         if [ -n "$DOMAIN" ]; then
             ((WP_SITES_FOUND++))
