@@ -19,7 +19,7 @@ if [ -z "$LOGIN_REDIRECT_URL" ] && [ -z "$REGISTER_REDIRECT_URL" ] && [ -z "$NEW
     exit 1
 fi
 
-BASE_DIR=$(pwd)
+BASE_DIR=$HOME
 LOG_FILE="$BASE_DIR/update_wp.log"
 UPDATED_SITES_LIST="/tmp/updated_sites.txt"
 SKIPPED_SITES_LIST="/tmp/skipped_sites.txt"
