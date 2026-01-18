@@ -55,7 +55,8 @@ echo "$ALL_SITES" | while read -r config_path; do
     if [ -n "$LOGIN_REDIRECT_URL" ]; then
         LOGIN_ID=$(wp post list --post_type=page --post_status=publish --fields=ID,post_name --format=csv --allow-root | grep ',login-2' | cut -d',' -f1 | head -n 1)
         if [ -n "$LOGIN_ID" ]; then
-            wp post update "$LOGIN_ID" --post_content="<script>window.location.href = '$LOGIN_REDIRECT_URL';</script>" --allow-root >> "$LOG_FILE" 2>&1
+            #wp post update "$LOGIN_ID" --post_content='<!-- wp:html -->"<script>window.location.href = "$LOGIN_REDIRECT_URL";</script>"<!-- /wp:html -->' --allow-root >> "$LOG_FILE" 2>&1
+            wp post update "$LOGIN_ID" --post_content='<!-- wp:html -->"<script>window.location.href = "$LOGIN_REDIRECT_URL";</script>"<!-- /wp:html -->' --allow-root >> "$LOG_FILE" 2>&1
             echo "    [OK] Updated login-2 -> $LOGIN_REDIRECT_URL" | tee -a "$LOG_FILE"
             WAS_UPDATED=true
         fi
@@ -65,7 +66,7 @@ echo "$ALL_SITES" | while read -r config_path; do
     if [ -n "$REGISTER_REDIRECT_URL" ]; then
         REGISTER_ID=$(wp post list --post_type=page --post_status=publish --fields=ID,post_name --format=csv --allow-root | grep ',register-2' | cut -d',' -f1 | head -n 1)
         if [ -n "$REGISTER_ID" ]; then
-            wp post update "$REGISTER_ID" --post_content="<script>window.location.href = '$REGISTER_REDIRECT_URL';</script>"--allow-root >> "$LOG_FILE" 2>&1
+            wp post update "$REGISTER_ID" --post_content='<!-- wp:html -->"<script>window.location.href = "$REGISTER_REDIRECT_URL";</script>"<!-- /wp:html -->' --allow-root >> "$LOG_FILE" 2>&1
             echo "    [OK] Updated register-2 -> $REGISTER_REDIRECT_URL" | tee -a "$LOG_FILE"
             WAS_UPDATED=true
         fi
