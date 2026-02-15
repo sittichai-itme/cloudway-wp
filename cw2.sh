@@ -3,20 +3,24 @@
 LOGIN_REDIRECT_URL=""
 REGISTER_REDIRECT_URL=""
 NEW_CONTACT_URL=""
-NEW_OPTION_URL=""  # สำหรับฟังก์ชัน -O
+OLD_URL_TARGET=""
+NEW_URL_VALUE=""
 
-while getopts "L:R:C:O:" opt; do
+# ปรับ getopts ให้รับ -O และ -N
+while getopts "L:R:C:O:N:" opt; do
   case $opt in
-    L) LOGIN_REDIRECT_URL="$OPTARG" ;;
-    R) REGISTER_REDIRECT_URL="$OPTARG" ;;
-    C) NEW_CONTACT_URL="$OPTARG" ;;
-    O) NEW_OPTION_URL="$OPTARG" ;;
+    L) LOGIN_REDIRECT_URL="$OPTARG" ;; # รันค่า URL ของ Page login
+    R) REGISTER_REDIRECT_URL="$OPTARG" ;; # รับค่า URL ของ Register
+    C) NEW_CONTACT_URL="$OPTARG" ;; # รับค่า URL ของ Contact
+    O) OLD_URL_TARGET="$OPTARG" ;; # รับค่า URL เดิม
+    N) NEW_URL_VALUE="$OPTARG"  ;; # รับค่า URL ใหม่
     \?) exit 1 ;;
   esac
 done
 
-if [ -z "$LOGIN_REDIRECT_URL" ] && [ -z "$REGISTER_REDIRECT_URL" ] && [ -z "$NEW_CONTACT_URL" ] && [ -z "$NEW_OPTION_URL" ]; then
-    echo "Usage: $0 [-L URL] [-R URL] [-C URL] [-O URL]"
+# เช็ค Argument
+if [ -z "$LOGIN_REDIRECT_URL" ] && [ -z "$REGISTER_REDIRECT_URL" ] && [ -z "$NEW_CONTACT_URL" ] && [ -z "$OLD_URL_TARGET" ]; then
+    echo "Usage: $0 [-L URL] [-R URL] [-C URL] [-O old_url -N new_url]"
     exit 1
 fi
 
@@ -54,7 +58,7 @@ while read -r config_path; do
         echo "------------------------------------------------" | tee -a "$LOG_FILE"
         echo "[$CURRENT_INDEX/$TOTAL_SITES] Site: $DOMAIN ($DISPLAY_NAME)" | tee -a "$LOG_FILE"
 
-        # --- ฟังก์ชันเดิม (แก้ใน Page Content) ---
+        # --- ฟังก์ชัน (Page Content) ---
         update_page_link() {
             local slug=$1; local new_url=$2; local label=$3
             local page_id=$(wp post list --post_type=page --post_status=publish --fields=ID,post_name --format=csv --allow-root | grep -E ",($slug|-2|,($slug))" | cut -d',' -f1 | head -n 1)
@@ -67,21 +71,18 @@ while read -r config_path; do
                     return 0
                 fi
             fi
-            return 0 # ไม่นับเป็น Error ร้ายแรงถ้าหาไม่เจอ
+            return 0
         }
 
-        # --- ฟังก์ชันใหม่ (แก้ใน wp_options) ---
+        # --- ฟังก์ชันที่ปรับปรุง (wp_options) ---
         update_option_url() {
+            local old_url=$1
             local new_url=$2
-            # ค้นหา Domain เก่าที่อยู่ในระบบก่อน (เฉพาะใน wp_options)
-            local old_domain=$(wp option get home --allow-root 2>/dev/null | sed -E 's|https?://||;s|/.*||')
             
-            if [ -n "$old_domain" ] && [ -n "$new_url" ]; then
-                # ใช้ search-replace เพื่อแก้ Serialized Data ใน wp_options
-                # โดยจะหา URL เดิมของเว็บนั้นๆ แล้วแทนที่ด้วย URL ใหม่ที่ระบุมา
-                echo "    [DB] Searching for old links in wp_options..." | tee -a "$LOG_FILE"
-                wp search-replace "$old_domain" "$(echo $new_url | sed -E 's|https?://||;s|/.*||')" wp_options --allow-root >> "$LOG_FILE" 2>&1
-                echo "    [OK] Database wp_options updated to $new_url" | tee -a "$LOG_FILE"
+            if [ -n "$old_url" ] && [ -n "$new_url" ]; then
+                echo "    [DB] Searching for '$old_url' and replacing with '$new_url' in wp_options..." | tee -a "$LOG_FILE"
+                wp search-replace "$old_url" "$new_url" wp_options --allow-root >> "$LOG_FILE" 2>&1
+                echo "    [OK] Database wp_options updated" | tee -a "$LOG_FILE"
             fi
         }
 
@@ -89,9 +90,7 @@ while read -r config_path; do
         [ -n "$LOGIN_REDIRECT_URL" ] && update_page_link "login" "$LOGIN_REDIRECT_URL" "Login"
         [ -n "$REGISTER_REDIRECT_URL" ] && update_page_link "register" "$REGISTER_REDIRECT_URL" "Register"
         [ -n "$NEW_CONTACT_URL" ] && update_page_link "contact-us" "$NEW_CONTACT_URL" "Contact"
-        
-        # รันฟังก์ชันแก้ Option ถ้ามีการใส่ -O
-        [ -n "$NEW_OPTION_URL" ] && update_option_url "" "$NEW_OPTION_URL" ""
+        [ -n "$OLD_URL_TARGET" ] && update_option_url "$OLD_URL_TARGET" "$NEW_URL_VALUE"
         
         wp cache flush --allow-root &>/dev/null
         exit $IS_ERR
