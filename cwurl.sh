@@ -32,7 +32,7 @@ LOG_FILE="$HOME/update_wp.log"
 echo "------ Update started at $(date) ------" >> "$LOG_FILE"
 
 # ค้นหาทุกเว็บใน Path ที่กำหนด
-ALL_SITES_LIST=$(find -L "$BASE_DIR/ekhrusktjp" -name "wp-config.php" ! -path "*/.*")
+ALL_SITES_LIST=$(find -L "$BASE_DIR" -name "wp-config.php" ! -path "*/.*")
 TOTAL_SITES=$(echo "$ALL_SITES_LIST" | grep -c "wp-config.php")
 
 if [ "$TOTAL_SITES" -eq 0 ]; then
@@ -40,7 +40,7 @@ if [ "$TOTAL_SITES" -eq 0 ]; then
     exit 1
 fi
 
-echo "Found $TOTAL_SITES WordPress installations. Starting process..." | tee -a "$LOG_FILE"
+echo "Found $TOTAL_SITES WordPress" | tee -a "$LOG_FILE"
 
 SUCCESS_COUNT=0
 FAILED_COUNT=0
